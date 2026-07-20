@@ -1,6 +1,6 @@
 # llm-gateway
 
-A **production LLM API gateway** — the layer a platform team puts between every internal app and
+A **production LLM API gateway**, the layer a platform team puts between every internal app and
 the model providers: **API-key auth**, **per-tenant rate limiting and token quotas**, **ordered
 provider failover** (AWS Bedrock → Anthropic API), **SSE streaming passthrough**, **per-tenant
 cost metering**, and an **append-only audit log**. One request path, every production concern.
@@ -57,16 +57,16 @@ the audit log.
 
 - **Rate limit ≠ quota.** The token bucket bounds *burst pressure* (requests/sec, answers 429 +
   `Retry-After`); the quota bounds *total spend* (tokens, answers 402). A tenant can be inside
-  their rate limit and still out of budget — production billing needs both.
+  their rate limit and still out of budget, production billing needs both.
 - **Streaming failover only before first byte.** If a provider dies mid-stream the client has
-  already received partial output — replaying on another provider would silently duplicate or
+  already received partial output, replaying on another provider would silently duplicate or
   contradict it. The gateway fails over only when an upstream dies *before* emitting anything;
   mid-stream failures surface as an SSE `error` event. An honest limitation, stated rather than
   hidden.
 - **Prompts are never audit-logged.** The audit trail carries request id / tenant / provider /
-  tokens / cost / latency / status — enough for compliance and debugging without turning the log
+  tokens / cost / latency / status, enough for compliance and debugging without turning the log
   into a PII store.
-- **Providers are one interface.** `complete` / `complete_stream` returning `(text, Usage)` —
+- **Providers are one interface.** `complete` / `complete_stream` returning `(text, Usage)`, 
   adding OpenAI/Gemini/vLLM upstreams is one class each; the failover chain is config
   (`GATEWAY_PROVIDERS=bedrock,anthropic`).
 
