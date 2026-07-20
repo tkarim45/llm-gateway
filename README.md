@@ -76,7 +76,7 @@ the audit log.
 pip install -e ".[dev]"
 pytest -q          # 8 passed, offline — auth 401, rate-limit 429+Retry-After, quota 402,
                    # failover to secondary, 502 when all down, metering math, tenant-scoped
-                   # audit (no prompts), SSE streaming — all against stub upstreams
+                   # audit (no prompts), SSE streaming, all against stub upstreams
 ```
 
 CI never calls a real provider; the real Bedrock path is validated by the failover demo above.
