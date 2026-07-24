@@ -13,6 +13,13 @@ curl -X POST localhost:8000/v1/chat \
   -d '{"prompt": "hello"}' -H 'content-type: application/json'
 ```
 
+
+## Architecture
+
+![architecture](docs/assets/architecture.png)
+
+*Interactive/exportable version: [`docs/assets/architecture.html`](docs/assets/architecture.html).*
+
 ## Request path
 
 ```
