@@ -185,80 +185,94 @@
     <div class="header"><div class="header-row"><div class="pulse-dot"></div>
       <h1>LLM Gateway — Architecture</h1>
       <div class="toolbar"><div class="toolbar-actions"><button onclick="copyAsImage(this)">📋 Copy</button><button onclick="downloadPNG(this)">🖼️ PNG</button><button onclick="downloadPDF(this)">📄 PDF</button></div><button class="toolbar-toggle" onclick="this.parentElement.classList.toggle('expanded')">⋯</button></div>
-    </div><p class="subtitle">Production LLM API gateway: API-key auth, per-tenant rate limiting + token quotas, ordered provider failover, SSE streaming, cost metering + audit.</p></div>
-    <div class="diagram-container"><svg viewBox="0 0 1280 600">
+    </div><p class="subtitle">The layer a platform team puts between every internal app and the model providers. One request path, every production concern: auth, rate limiting, quotas, failover, streaming, metering, audit.</p></div>
+    <div class="diagram-container"><svg viewBox="0 0 1290 728">
 <defs><marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/></marker><marker id="loop" markerWidth="11" markerHeight="8" refX="9" refY="4" orient="auto"><polygon points="0 0, 11 4, 0 8" fill="#22d3ee"/></marker><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/></pattern></defs>
-<rect width="1280" height="600" fill="url(#grid)"/>
-<rect x="24" y="150" width="600" height="300" rx="12" fill="rgba(251,113,133,0.04)" stroke="#fb7185" stroke-width="1" stroke-dasharray="8,4"/>
-<text x="38" y="168" fill="#fb7185" font-size="10" font-weight="600">① ADMIT  ·  auth → rate-limit → quota</text>
-<rect x="650" y="150" width="606" height="300" rx="12" fill="rgba(251,191,36,0.04)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
-<text x="664" y="168" fill="#fbbf24" font-size="10" font-weight="600">② ROUTE &amp; METER  ·  failover + cost/audit</text>
-<line x1="215" y1="259" x2="250" y2="259" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<text x="232" y="254" fill="#94a3b8" font-size="8.5" text-anchor="middle">request</text>
-<line x1="335" y1="157" x2="335" y2="228" stroke="#fb7185" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<text x="335" y="194" fill="#94a3b8" font-size="8.5" text-anchor="middle">verify</text>
-<path d="M 378 228 C 438 228, 438 157, 498 157" fill="none" stroke="#fb7185" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<path d="M 378 290 C 438 290, 438 360, 498 360" fill="none" stroke="#fb7185" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<line x1="420" y1="259" x2="660" y2="259" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<text x="540" y="254" fill="#94a3b8" font-size="8.5" text-anchor="middle">admit</text>
-<path d="M 788 228 C 848 228, 848 157, 910 157" fill="none" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<text x="848" y="188" fill="#94a3b8" font-size="8.5" text-anchor="middle">try 1</text>
-<path d="M 788 290 C 848 290, 848 360, 910 360" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
-<text x="848" y="320" fill="#94a3b8" font-size="8.5" text-anchor="middle">try 2</text>
-<line x1="745" y1="290" x2="745" y2="360" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-<text x="745" y="327" fill="#94a3b8" font-size="8.5" text-anchor="middle">meter + log</text>
-<rect x="45" y="228" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="45" y="228" width="170" height="62" rx="7" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
-<text x="130" y="248" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Tenants</text>
-<text x="130" y="264" fill="#94a3b8" font-size="9" text-anchor="middle">API keys</text>
-<rect x="250" y="95" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="250" y="95" width="170" height="62" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
-<text x="335" y="115" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">API-key Auth</text>
-<text x="335" y="131" fill="#94a3b8" font-size="9" text-anchor="middle">per-tenant</text>
-<rect x="250" y="228" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="250" y="228" width="170" height="62" rx="7" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
-<text x="335" y="248" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Gateway</text>
-<text x="335" y="264" fill="#94a3b8" font-size="9" text-anchor="middle">FastAPI</text>
-<rect x="455" y="95" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="455" y="95" width="170" height="62" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
-<text x="540" y="115" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Rate Limit</text>
-<text x="540" y="131" fill="#94a3b8" font-size="9" text-anchor="middle">token-bucket · 429</text>
-<rect x="455" y="360" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="455" y="360" width="170" height="62" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
-<text x="540" y="380" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Token Quota</text>
-<text x="540" y="396" fill="#94a3b8" font-size="9" text-anchor="middle">402 on exceed</text>
-<rect x="660" y="228" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="660" y="228" width="170" height="62" rx="7" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
-<text x="745" y="248" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Provider Failover</text>
-<text x="745" y="264" fill="#94a3b8" font-size="9" text-anchor="middle">ordered</text>
-<rect x="867" y="95" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="867" y="95" width="170" height="62" rx="7" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
-<text x="952" y="115" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Bedrock</text>
-<text x="952" y="131" fill="#94a3b8" font-size="9" text-anchor="middle">primary</text>
-<rect x="867" y="360" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="867" y="360" width="170" height="62" rx="7" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
-<text x="952" y="380" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Fallback</text>
-<text x="952" y="396" fill="#94a3b8" font-size="9" text-anchor="middle">secondary</text>
-<rect x="660" y="360" width="170" height="62" rx="7" fill="#0f172a"/>
-<rect x="660" y="360" width="170" height="62" rx="7" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
-<text x="745" y="380" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">Cost Meter + Audit</text>
-<text x="745" y="396" fill="#94a3b8" font-size="9" text-anchor="middle">JSONL append-only</text>
-<text x="40" y="572" fill="#fff" font-size="10" font-weight="600">Legend</text>
-<rect x="106" y="563" width="15" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
-<text x="126" y="572" fill="#94a3b8" font-size="8.5">Frontend/UI</text>
-<rect x="223" y="563" width="15" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
-<text x="243" y="572" fill="#94a3b8" font-size="8.5">Backend</text>
-<rect x="312" y="563" width="15" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
-<text x="332" y="572" fill="#94a3b8" font-size="8.5">Data/Index</text>
-<rect x="422" y="563" width="15" height="10" rx="2" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1"/>
-<text x="442" y="572" fill="#94a3b8" font-size="8.5">Model/Cloud</text>
-<rect x="539" y="563" width="15" height="10" rx="2" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1"/>
-<text x="559" y="572" fill="#94a3b8" font-size="8.5">Safety/Gate</text>
-<rect x="656" y="563" width="15" height="10" rx="2" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1"/>
-<text x="676" y="572" fill="#94a3b8" font-size="8.5">Pipeline</text>
+<rect width="1290" height="728" fill="url(#grid)"/>
+<rect x="79" y="59" width="1122" height="158" rx="12" fill="rgba(251,113,133,0.04)" stroke="#fb7185" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="93" y="78" fill="#fb7185" font-size="10" font-weight="600">① THE GATE</text>
+<rect x="290" y="289" width="922" height="158" rx="12" fill="rgba(251,191,36,0.04)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="304" y="308" fill="#fbbf24" font-size="10" font-weight="600">② UPSTREAM</text>
+<rect x="296" y="509" width="905" height="158" rx="12" fill="rgba(167,139,250,0.04)" stroke="#a78bfa" stroke-width="1" stroke-dasharray="8,4"/>
+<text x="310" y="528" fill="#a78bfa" font-size="10" font-weight="600">③ METERED</text>
+<line x1="255" y1="150" x2="405" y2="150" stroke="#94a3b8" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="330" y="143" fill="#cbd5e1" font-size="8.5" text-anchor="middle">Bearer key</text>
+<line x1="555" y1="150" x2="715" y2="150" stroke="#fb7185" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="635" y="143" fill="#cbd5e1" font-size="8.5" text-anchor="middle">401 if bad</text>
+<line x1="865" y1="150" x2="1025" y2="150" stroke="#fb7185" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="945" y="143" fill="#cbd5e1" font-size="8.5" text-anchor="middle">429 + Retry-After</text>
+<line x1="1100" y1="184" x2="1100" y2="346" stroke="#fbbf24" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="1141" y="268" fill="#cbd5e1" font-size="8.5" text-anchor="middle">402 if over</text>
+<line x1="1014" y1="380" x2="844" y2="380" stroke="#fbbf24" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="929" y="373" fill="#cbd5e1" font-size="8.5" text-anchor="middle">ordered chain</text>
+<line x1="676" y1="380" x2="484" y2="380" stroke="#22d3ee" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="580" y="373" fill="#cbd5e1" font-size="8.5" text-anchor="middle">SSE passthrough</text>
+<line x1="400" y1="414" x2="400" y2="566" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="438" y="493" fill="#cbd5e1" font-size="8.5" text-anchor="middle">real usage</text>
+<line x1="478" y1="600" x2="685" y2="600" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="582" y="593" fill="#cbd5e1" font-size="8.5" text-anchor="middle">record</text>
+<line x1="835" y1="600" x2="1025" y2="600" stroke="#22d3ee" stroke-width="1.6" marker-end="url(#arrowhead)"/>
+<text x="930" y="593" fill="#cbd5e1" font-size="8.5" text-anchor="middle">read back</text>
+<rect x="105" y="116" width="151" height="67" rx="7" fill="#0f172a"/>
+<rect x="105" y="116" width="151" height="67" rx="7" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="180" y="138" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">Client App</text>
+<text x="180" y="156" fill="#94a3b8" font-size="9.0" text-anchor="middle">Bearer gw-&lt;tenant&gt;-key</text>
+<rect x="405" y="116" width="150" height="67" rx="7" fill="#0f172a"/>
+<rect x="405" y="116" width="150" height="67" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+<text x="480" y="138" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">auth</text>
+<text x="480" y="156" fill="#94a3b8" font-size="9.0" text-anchor="middle">401 on a bad key</text>
+<rect x="715" y="109" width="150" height="82" rx="7" fill="#0f172a"/>
+<rect x="715" y="109" width="150" height="82" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+<text x="790" y="131" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">token bucket</text>
+<text x="790" y="149" fill="#94a3b8" font-size="9.0" text-anchor="middle">bounds burst · 429</text>
+<text x="790" y="164" fill="#94a3b8" font-size="9.0" text-anchor="middle">+ Retry-After</text>
+<rect x="1025" y="116" width="150" height="67" rx="7" fill="#0f172a"/>
+<rect x="1025" y="116" width="150" height="67" rx="7" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+<text x="1100" y="138" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">token quota</text>
+<text x="1100" y="156" fill="#94a3b8" font-size="9.0" text-anchor="middle">bounds spend · 402</text>
+<rect x="316" y="346" width="167" height="67" rx="7" fill="#0f172a"/>
+<rect x="316" y="346" width="167" height="67" rx="7" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+<text x="400" y="368" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">SSE Stream</text>
+<text x="400" y="386" fill="#94a3b8" font-size="9.0" text-anchor="middle">provider · chunks · usage</text>
+<rect x="676" y="339" width="167" height="82" rx="7" fill="#0f172a"/>
+<rect x="676" y="339" width="167" height="82" rx="7" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+<text x="760" y="361" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">Provider Chain</text>
+<text x="760" y="379" fill="#94a3b8" font-size="9.0" text-anchor="middle">AWS Bedrock (primary)</text>
+<text x="760" y="394" fill="#94a3b8" font-size="9.0" text-anchor="middle">Anthropic API (secondary)</text>
+<rect x="1014" y="346" width="172" height="67" rx="7" fill="#0f172a"/>
+<rect x="1014" y="346" width="172" height="67" rx="7" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+<text x="1100" y="368" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">ordered failover</text>
+<text x="1100" y="386" fill="#94a3b8" font-size="9.0" text-anchor="middle">per-provider failure count</text>
+<rect x="322" y="566" width="156" height="67" rx="7" fill="#0f172a"/>
+<rect x="322" y="566" width="156" height="67" rx="7" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+<text x="400" y="588" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">metering</text>
+<text x="400" y="606" fill="#94a3b8" font-size="9.0" text-anchor="middle">tokens + USD per tenant</text>
+<rect x="685" y="559" width="150" height="82" rx="7" fill="#0f172a"/>
+<rect x="685" y="559" width="150" height="82" rx="7" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+<text x="760" y="581" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">audit log</text>
+<text x="760" y="599" fill="#94a3b8" font-size="9.0" text-anchor="middle">append-only JSONL</text>
+<text x="760" y="614" fill="#94a3b8" font-size="9.0" text-anchor="middle">prompts NEVER logged</text>
+<rect x="1025" y="559" width="151" height="82" rx="7" fill="#0f172a"/>
+<rect x="1025" y="559" width="151" height="82" rx="7" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+<text x="1100" y="581" fill="#fff" font-size="11.5" font-weight="600" text-anchor="middle">Endpoints</text>
+<text x="1100" y="599" fill="#94a3b8" font-size="9.0" text-anchor="middle">/v1/usage · /v1/health</text>
+<text x="1100" y="614" fill="#94a3b8" font-size="9.0" text-anchor="middle">/v1/audit · /healthz</text>
+<text x="40" y="700" fill="#fff" font-size="10" font-weight="600">Legend</text>
+<rect x="106" y="691" width="15" height="10" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+<text x="126" y="700" fill="#94a3b8" font-size="8.5">Frontend/UI</text>
+<rect x="210.1" y="691" width="15" height="10" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+<text x="230.1" y="700" fill="#94a3b8" font-size="8.5">Backend</text>
+<rect x="293.79999999999995" y="691" width="15" height="10" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1"/>
+<text x="313.79999999999995" y="700" fill="#94a3b8" font-size="8.5">Data/Index</text>
+<rect x="392.79999999999995" y="691" width="15" height="10" rx="2" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1"/>
+<text x="412.79999999999995" y="700" fill="#94a3b8" font-size="8.5">Model/Cloud</text>
+<rect x="496.9" y="691" width="15" height="10" rx="2" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1"/>
+<text x="516.9" y="700" fill="#94a3b8" font-size="8.5">Eval/Gate</text>
+<rect x="590.8" y="691" width="15" height="10" rx="2" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+<text x="610.8" y="700" fill="#94a3b8" font-size="8.5">External</text>
 </svg></div>
-    <div class="cards"><div class="card"><div class="card-header"><div class="card-dot rose"></div><h3>Admit</h3></div><ul><li>• per-tenant API-key auth</li><li>• token-bucket rate limiting → 429</li><li>• token quotas → 402 on exceed</li></ul></div><div class="card"><div class="card-header"><div class="card-dot amber"></div><h3>Route</h3></div><ul><li>• ordered provider failover (verified live)</li><li>• dead primary → served by Bedrock on attempt 2</li><li>• SSE streaming passthrough</li></ul></div><div class="card"><div class="card-header"><div class="card-dot violet"></div><h3>Meter</h3></div><ul><li>• per-tenant cost metering ($/tokens)</li><li>• /v1/usage endpoint</li><li>• append-only JSONL audit (prompts never logged)</li></ul></div></div>
-    <p class="footer">llm-gateway · FastAPI · anthropic[bedrock] · token-bucket + quota · SSE · JSONL audit</p>
+    <div class="cards"><div class="card"><div class="card-header"><div class="card-dot rose"></div><h3>Rate limit is not the same thing as quota</h3></div><ul><li>• the token bucket bounds burst pressure (requests/sec) and answers 429 with a Retry-After header</li><li>• the quota bounds total spend (tokens) and answers 402 when the budget is exhausted</li><li>• a tenant can be well inside their rate limit and still out of budget, so production billing needs both</li><li>• auth comes first and answers 401, so an unknown key never reaches either check</li></ul></div><div class="card"><div class="card-header"><div class="card-dot amber"></div><h3>Failover, verified against real infrastructure</h3></div><ul><li>• a demo run puts a deliberately dead primary in front of real AWS Bedrock: 200 OK, served by bedrock, attempts 2</li><li>• the client never saw the outage; the gateway absorbed the failed attempt and metered the real token usage</li><li>• streaming fails over only BEFORE the first byte, because replaying a half-sent stream would duplicate or contradict it</li><li>• mid-stream failures surface as an SSE error event, an honest limitation rather than a hidden one</li><li>• providers are one interface (complete / complete_stream returning text + Usage), so adding OpenAI or vLLM is one class</li></ul></div><div class="card"><div class="card-header"><div class="card-dot violet"></div><h3>Metered and auditable without becoming a PII store</h3></div><ul><li>• per-tenant token and USD metering, readable at /v1/usage alongside quota consumed</li><li>• the audit record carries request id, tenant, provider, tokens, cost, latency and status</li><li>• prompts are never audit-logged: enough for compliance and debugging, without the log becoming the liability</li><li>• 8 offline tests cover 401, 429 + Retry-After, 402, failover, 502-when-all-down, metering math, tenant-scoped audit and SSE</li></ul></div></div>
+    <p class="footer">llm-gateway · FastAPI · token-bucket + quota (stdlib) · anthropic[bedrock] / anthropic failover · SSE · JSONL audit</p>
   </div>
 <script>
     async function copyAsImage(btn) {
